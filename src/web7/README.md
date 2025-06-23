@@ -2,7 +2,7 @@
 
 This project is a **REST API for managing contacts**, built using the **FastAPI** framework. It provides functionality to store and manage contact information, including CRUD operations (Create, Read, Update, Delete). The API uses **SQLAlchemy** as the ORM for database interactions and **PostgreSQL** as the database.
 
-The project also includes **Swagger documentation** for easy exploration of the API and uses **Pydantic** for data validation.
+The project now includes **user authentication and authorization** using **JWT tokens**, **email verification**, **rate limiting**, and **user avatar management** with **Cloudinary**.
 
 ---
 
@@ -11,8 +11,12 @@ The project also includes **Swagger documentation** for easy exploration of the 
 - **FastAPI Framework**: A modern, fast (high-performance) web framework for building APIs.
 - **SQLAlchemy ORM**: Used for database modeling and interaction.
 - **PostgreSQL Database**: A robust and reliable relational database.
-- **CRUD Operations**: Full support for creating, reading, updating, and deleting contacts.
-- **Date of Birth Support**: Ability to store and manage the date of birth for each contact.
+- **JWT Authentication**: Secure user authentication and authorization using access tokens.
+- **Email Verification**: Users must verify their email addresses to activate their accounts.
+- **Rate Limiting**: Limits the number of requests to sensitive routes (e.g., `/me`).
+- **User-Specific Operations**: Users can only access and modify their own contacts.
+- **CORS Support**: Enabled for secure cross-origin requests.
+- **Cloudinary Integration**: Allows users to upload and update their avatars.
 - **Swagger Documentation**: Automatically generated API documentation available at `/docs`.
 - **Pydantic Validation**: Ensures data integrity and validation for all API inputs.
 
@@ -22,6 +26,7 @@ The project also includes **Swagger documentation** for easy exploration of the 
 
 - **Python**: 3.10 or higher
 - **PostgreSQL**: Version 14 or higher
+- **Docker Compose**: For running the application and its dependencies.
 - **Dependencies**: Listed in `requirements.txt`
 
 ---
@@ -53,7 +58,7 @@ CREATE DATABASE contacts_db
 
 - Update the `.env` file with your database credentials:
 
-```bash
+```properties
 POSTGRES_DB=contacts_db
 POSTGRES_USER=example_user
 POSTGRES_PASSWORD=your_password
@@ -66,8 +71,15 @@ POSTGRES_PORT=5432
    alembic upgrade head
    ```
 6. **Start the Application**:
+
    ```bash
    uvicorn main:app --reload
+   ```
+
+7. **Run with Docker Compose** (Optional):
+   If you prefer to use Docker Compose, ensure `docker` and `docker-compose` are installed, then run:
+   ```bash
+   docker-compose up --build
    ```
 
 ---
@@ -82,13 +94,18 @@ http://localhost:8000
 
 ### Endpoints
 
-| Method | Endpoint         | Description              |
-| ------ | ---------------- | ------------------------ |
-| GET    | `/contacts`      | Retrieve all contacts    |
-| GET    | `/contacts/{id}` | Retrieve a contact by ID |
-| POST   | `/contacts`      | Create a new contact     |
-| PUT    | `/contacts/{id}` | Update a contact by ID   |
-| DELETE | `/contacts/{id}` | Delete a contact by ID   |
+| Method | Endpoint         | Description                           |
+| ------ | ---------------- | ------------------------------------- |
+| POST   | `/auth/register` | Register a new user                   |
+| POST   | `/auth/login`    | Log in and retrieve a JWT token       |
+| GET    | `/auth/verify`   | Verify a user's email address         |
+| GET    | `/contacts`      | Retrieve all contacts (user-specific) |
+| GET    | `/contacts/{id}` | Retrieve a contact by ID              |
+| POST   | `/contacts`      | Create a new contact                  |
+| PUT    | `/contacts/{id}` | Update a contact by ID                |
+| DELETE | `/contacts/{id}` | Delete a contact by ID                |
+| GET    | `/me`            | Retrieve the current user's profile   |
+| PUT    | `/me/avatar`     | Update the user's avatar              |
 
 ### Swagger Documentation
 
@@ -129,3 +146,16 @@ py-web/
 - **Pydantic**: Data validation and settings management.
 - **Alembic**: Database migrations.
 - **Uvicorn**: ASGI server for running the application.
+- **JWT**: Secure user authentication and authorization.
+- **Cloudinary**: For managing user avatars.
+- **Docker Compose**: For containerized deployment.
+
+---
+
+## Future Improvements
+
+- Add advanced search and filtering capabilities for contacts.
+- Implement pagination for retrieving large contact lists.
+- Deploy the application to a cloud platform (e.g., AWS, Heroku).
+- Add support for social login (e.g., Google, Facebook).
+- Improve rate-limiting policies for better security.
