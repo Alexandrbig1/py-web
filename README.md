@@ -86,12 +86,6 @@ This project is for educational purposes.
 
 ---
 
-## Author
-
-Alex Smagin
-
----
-
 ## Languages and Tools
 
 <div align="center">  
